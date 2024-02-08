@@ -2,7 +2,6 @@
 
 1. Enumerating Order States:
 The code considers three states for each order:
-
 Received: The order is received but not yet picked up.
 Picked Up: The order is picked up from the restaurant.
 Delivered: The order is delivered to the customer.
@@ -21,7 +20,6 @@ Delivered State: No additional action is needed for this order.
 
 5. Time Calculations:
 The algorithm calculates the time for various actions, including:
-
 Time to travel between locations based on the delivery executive's speed.
 Waiting time if the executive arrives at the restaurant before the order is ready (max(0, prepTimeForOrder - timeWhenExecutiveReachesRestaurant)).
 Accumulating the time taken for each action.
@@ -40,7 +38,7 @@ The minimum time required to deliver all orders is printed in the main function.
 
 Note:
 The code has placeholder implementations for functions like getDistanceBetweenTwoLocations and getTimeToMoveBetweenLocations. These functions should be implemented based on the actual logic to calculate distance and time.
-The use of recursion and backtracking helps explore the entire state space, but it may lead to an exponential number of recursive calls, making it less efficient for a large number of orders. Consideration of optimization techniques like memoization or dynamic programming could be explored to improve efficiency.
+The use of recursion and backtracking helps explore the entire state space, but it may lead to an exponential number of recursive calls, making it less efficient for a large number of orders.
 
 
 
