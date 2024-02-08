@@ -1,5 +1,7 @@
 #include <vector>
 #include <iostream>
+#include <algorithm>  // Required for std::min and std::max
+#include <climits> 
 using namespace std;
 
 //======= ENUMs ==========
