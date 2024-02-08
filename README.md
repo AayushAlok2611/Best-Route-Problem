@@ -1,5 +1,4 @@
-Approach ->
-
+**Approach ->**
 
 Orders are assinged to delivery executives . These orders can have 3 states
 1) RECEIVED -> Delivery executive has just received the order
@@ -13,6 +12,7 @@ the order is picked up or delivered , depending upon its state. Do nothing if th
 
 Try all possible combinations of picking up the order from different restaurants , in different orders, and delivering them to different customers, in different orders, and return the minimum time , among all such combinations.
 
+**Time And Space complexity Analysis ->**
 
 The time complexity of the provided recursive function minTimeToDeliverAllOrders can be analyzed in terms of the number of recursive calls and the work done in each call.
 
@@ -32,5 +32,6 @@ Therefore, the overall time complexity is exponential in terms of the number of 
 The space complexity is the depth of the recursion stack -> O(n)
 
 
-Assumptions ->
+**Assumptions ->**
+
 1) If we have 2 location , the function "getDistanceBetweenTwoLocations" will give us the distance between the 2 locations , the implementation details for this were not clear to me so I have left the function body blank. I have assumed that the time complexity for this operation is constant.
