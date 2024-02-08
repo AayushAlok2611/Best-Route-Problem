@@ -27,9 +27,9 @@ Let's analyze the time complexity:
 For each order, the function makes three recursive calls (one for each state: received, picked up, and delivered).
 The function does a constant amount of work for each order, including calculations based on the locations and speeds.
 The recursion depth is at most n because the function explores the state space for each order.
-Therefore, the overall time complexity is exponential in terms of the number of orders: O(3^n)
+Therefore, the overall time complexity is exponential in terms of the number of orders: *O(3^n)*
 
-The space complexity is the depth of the recursion stack -> O(n)
+The space complexity is the depth of the recursion stack -> *O(n)*
 
 
 **Assumptions ->**
