@@ -143,9 +143,15 @@ class DeliveryExecutive{
 };
 
 // =================== Util functions ===========================================
+
+double getDistanceBetweenTwoLocations(Location location1,Location location2)
+{
+    // Logic to get the distance between 2 locations
+}
 double getTimeToMoveBetweenLocations(Location location1, Location location2, double speed)
 {
-    // implementation of logic of getting distance between 2 locations
+    double distance = getDistanceBetweenTwoLocations(location1, location2);
+    return distance/speed;
 }
 
 
@@ -239,6 +245,10 @@ int main()
     DeliveryExecutive deliveryExecutive = DeliveryExecutive();
     Location startingLocation = Location(0,0);
     deliveryExecutive.setLocation(startingLocation);
+
+    //code populate the orders for the deliveryExecutive
+
+    int requiredTime = minTimeToDeliverAllOrders(deliveryExecutive,0);
 
     return 0;
 }
