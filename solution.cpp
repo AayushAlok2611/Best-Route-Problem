@@ -248,9 +248,9 @@ int main()
     Location startingLocation = Location(0,0);
     deliveryExecutive.setLocation(startingLocation);
 
-    //code populate the orders for the deliveryExecutive
+    //code to populate the orders for the deliveryExecutive
 
-    int requiredTime = minTimeToDeliverAllOrders(deliveryExecutive,0);
+    double requiredTime = minTimeToDeliverAllOrders(deliveryExecutive,0);
 
     return 0;
 }
