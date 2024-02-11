@@ -169,79 +169,84 @@ Here we try all possible combinations of picking up the order from different res
 the minTime , among all such combinations
 
 */
-double minTimeToDeliverAllOrders(DeliveryExecutive deliveryExecutive,double timeElapsed)
-{
-    bool allOrdersDelivered = true;
-    vector<Order> orders = deliveryExecutive.getOrderList();
-    double minTime = INT_MAX;
-    for(Order order:orders)
-    {
-        if(order.isDelivered()) // no need to do anything 
-        {
-            continue;
-        }
-        else if(order.isReceived()) // need to pick up this order from restaurant
-        {   
-            allOrdersDelivered = false;
 
-            Location currentDeliveryExecutiveLocation = deliveryExecutive.getDeliveryExecutiveLocation();
+class DeliveryOptimizer {
+    public:
+        double minTimeToDeliverAllOrders(DeliveryExecutive& deliveryExecutive, double timeElapsed) {
+            bool allOrdersDelivered = true;
+            vector<Order> orders = deliveryExecutive.getOrderList();
+            double minTime = INT_MAX;
+
+            for (Order order : orders) {
+                if (order.isDelivered()) {
+                    continue;
+                } else if (order.isReceived()) {
+                    allOrdersDelivered = false;
+                    processPickupAndBacktrack(deliveryExecutive, order, timeElapsed, minTime);
+                } else if (order.isPickedUp()) {
+                    allOrdersDelivered = false;
+                    processDeliveryAndBacktrack(deliveryExecutive, order, timeElapsed, minTime);
+                }
+            }
+
+            if (allOrdersDelivered) return 0.0;
+            return minTime;
+        }
+
+    private:
+        void processPickupAndBacktrack(DeliveryExecutive& deliveryExecutive, Order& order, double timeElapsed, double& minTime) {
+            Location currentLocation = deliveryExecutive.getDeliveryExecutiveLocation();
             Location restaurantLocation = order.getRestaurantLocation();
             double deliveryExecutiveSpeed = deliveryExecutive.getSpeed();
             
             double prepTimeForOrder = order.getPrepTime();
-            double timeToTravelToRestaurant = getTimeToMoveBetweenLocations(currentDeliveryExecutiveLocation,restaurantLocation,deliveryExecutiveSpeed);
+            double timeToTravelToRestaurant = getTimeToMoveBetweenLocations(currentLocation, restaurantLocation, deliveryExecutiveSpeed);
             double timeWhenExecutiveReachesRestaurant = timeElapsed + timeToTravelToRestaurant;
-            double waitingTime = max((double)0, prepTimeForOrder - timeWhenExecutiveReachesRestaurant); 
+            double waitingTime = std::max(0.0, prepTimeForOrder - timeWhenExecutiveReachesRestaurant); 
             double timeTakenToPickUpOrder = timeToTravelToRestaurant + waitingTime;
 
-            // mark order as picked up and move delivery executive to restaurant's location
+            // Update delivery state
             order.setAsPickedUp();
             deliveryExecutive.setLocation(restaurantLocation);
-            deliveryExecutive.setOrderList(orders);
+            deliveryExecutive.setOrderList(deliveryExecutive.getOrderList());
 
             double currentAnswer = timeTakenToPickUpOrder;
             currentAnswer += minTimeToDeliverAllOrders(deliveryExecutive, timeElapsed + timeTakenToPickUpOrder);
 
-            // update the minTime
-            minTime = min(minTime, currentAnswer);
+            // Update the minTime
+            minTime = std::min(minTime, currentAnswer);
 
-            // backtrack
+            // Backtrack
             order.setAsReceived();
-            deliveryExecutive.setLocation(currentDeliveryExecutiveLocation);
-            deliveryExecutive.setOrderList(orders);
+            deliveryExecutive.setLocation(currentLocation);
+            deliveryExecutive.setOrderList(deliveryExecutive.getOrderList());
         }
-        else if(order.isPickedUp()) // need to deliver this order to the customer
-        {
-            allOrdersDelivered = false;
 
-            Location currentDeliveryExecutiveLocation = deliveryExecutive.getDeliveryExecutiveLocation();
+        void processDeliveryAndBacktrack(DeliveryExecutive& deliveryExecutive,Order& order, double timeElapsed, double& minTime) {
+            Location currentLocation = deliveryExecutive.getDeliveryExecutiveLocation();
             Location customerLocation = order.getCustomerLocation();
             double deliveryExecutiveSpeed = deliveryExecutive.getSpeed();
 
-            double timeToTravelToCustomer = getTimeToMoveBetweenLocations(currentDeliveryExecutiveLocation,customerLocation,deliveryExecutiveSpeed);
+            double timeToTravelToCustomer = getTimeToMoveBetweenLocations(currentLocation, customerLocation, deliveryExecutiveSpeed);
             double timeTakenToDeliverOrder = timeToTravelToCustomer;
 
-            // mark order as delivered and move delivery executive to customer's location
+            // Update delivery state
             order.setAsDelivered();
             deliveryExecutive.setLocation(customerLocation);
-            deliveryExecutive.setOrderList(orders);
+            deliveryExecutive.setOrderList(deliveryExecutive.getOrderList());
 
             double currentAnswer = timeTakenToDeliverOrder;
             currentAnswer += minTimeToDeliverAllOrders(deliveryExecutive, timeElapsed + timeTakenToDeliverOrder);
 
-             // update the minTime
-            minTime = min(minTime, currentAnswer);
+            // Update the minTime
+            minTime = std::min(minTime, currentAnswer);
 
-            // backtrack
+            // Backtrack
             order.setAsPickedUp();
-            deliveryExecutive.setLocation(currentDeliveryExecutiveLocation);
-            deliveryExecutive.setOrderList(orders);
+            deliveryExecutive.setLocation(currentLocation);
+            deliveryExecutive.setOrderList(deliveryExecutive.getOrderList());
         }
-    }
-    if (allOrdersDelivered) return 0.0;
-    return minTime;
-}
-
+};
 
 int main()
 {   
@@ -251,7 +256,9 @@ int main()
 
     //code to populate the orders for the deliveryExecutive
 
-    double requiredTime = minTimeToDeliverAllOrders(deliveryExecutive,0);
+
+    DeliveryOptimizer optimizer;
+    double requiredTime = optimizer.minTimeToDeliverAllOrders(deliveryExecutive,0);
 
     return 0;
 }
